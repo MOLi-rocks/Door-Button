@@ -1,30 +1,32 @@
-import rpio from 'rpio';
-import rp from 'request';
-
+const rpio = require('rpio');
+const rp = require('request');
 let timer;
 
-rpio.open(15, rpio.INPUT, rpio.PULL_DOWN);
+rpio.open(11, rpio.INPUT, rpio.PULL_DOWN);
 
-open() {
-  rp.post({url: 'http://localhost:3087/open' }, (err, res, body) => {
+rpio.poll(11, check);
+
+function open() {
+  rp.post({url: 'http://localhost:3087/switch' }, (err, res, body) => {
     console.log(body);
-  }); 
+  });
 }
 
 // button up -> HIGH
 // button press -> LOW
-change(pin) {
-  var status = rpio.read(pin);
+function change(pin) {
+  var status = rpio.read(11);
+
   if (status === rpio.HIGH)
     open();
 }
 
-check(pin) {
-  // console.log(rpio.read(pin));
+function check(pin) {
   if (timer) {
      clearTimeout(timer);
   }
-  timer = setTimeout(pin => {change(pin);}, 300);
-}
 
-rpio.poll(15, check);
+  timer = setTimeout( () => {
+    change(pin);
+  }, 300);
+}
