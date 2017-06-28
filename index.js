@@ -1,5 +1,7 @@
 const rpio = require('rpio');
 const rp = require('request');
+const ENV = require('./env.js');
+
 let timer;
 
 rpio.open(11, rpio.INPUT, rpio.PULL_DOWN);
@@ -7,7 +9,12 @@ rpio.open(11, rpio.INPUT, rpio.PULL_DOWN);
 rpio.poll(11, check);
 
 function open() {
-  rp.post({url: 'http://localhost:3087/switch' }, (err, res, body) => {
+  rp.post({
+    url: 'http://localhost:3087/switch',
+    form: {
+      token: ENV.TOKEN
+    }
+  }, (err, res, body) => {
     console.log(body);
   });
 }
@@ -23,7 +30,7 @@ function change(pin) {
 
 function check(pin) {
   if (timer) {
-     clearTimeout(timer);
+    clearTimeout(timer);
   }
 
   timer = setTimeout( () => {
