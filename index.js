@@ -12,7 +12,8 @@ function open() {
   rp.post({
     url: 'http://localhost:3087/switch',
     form: {
-      token: ENV.TOKEN
+      token: ENV.TOKEN,
+      message: '按鈕'
     }
   }, (err, res, body) => {
     console.log(body);
